@@ -1,58 +1,49 @@
+properties([
+    parameters([
+        choice(choices: ['plan', 'apply', 'destroy'], name: 'Terraform_Action')
+    ])
+])
+
 pipeline {
-    agent { label 'jenkins_slave' }
-    parameters {
-        string(name: 'AWS_CREDENTIAL_ID', defaultValue: 'markwang access', description: 'The ID of the AWS credentials to use')
-        string(name: 'S3_BUCKET', defaultValue: 'techscrumbucket', description: 'The name of the S3 bucket to deploy to')
-        string(name: 'GIT_BRANCH', defaultValue: 'main', description: 'The Git branch to build and deploy')
+    agent any
+    tools {
+        terraform 'terraform'
     }
-
-    environment {
-        AWS_DEFAULT_REGION = 'ap-southeast-2'
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Preparing') {
             steps {
-                script {
-                    // Checkout the specified branch
-                    checkout([$class: 'GitSCM', branches: [[name: params.GIT_BRANCH]], userRemoteConfigs: [[url: 'https://github.com/TechScrumTeamBeta/DevOps-Techscrum.fe']]])
+                sh 'echo Preparing'
+            }
+        }
+        stage('Git Checkout') {
+            steps {
+                git branch: 'lidi', url: 'https://github.com/TechScrumTeamBeta/techscrumjr11.fe'
+            }
+        }
+        stage('Init') {
+            steps {
+                withAWS(credentials: 'aws-lidi-jr', region: 'ap-southeast-2') {
+                sh 'terraform -chdir=terraform init'
                 }
             }
         }
-
-        stage('Build') {
+        stage('Action') {
             steps {
-                // Install dependencies and build the application
-                sh 'npm install --force'
-                sh 'cp .env.example .env '
-                sh 'npm run build'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',   
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', 
-                        credentialsId: params.AWS_CREDENTIAL_ID]
-                    ]) {
-                    script {
-                        // Assuming your build artifacts are in the 'build/' directory
-                        sh "aws s3 sync build/ s3://${params.S3_BUCKET}/"
+                echo "${params.Terraform_Action}"
+                withAWS(credentials: 'aws-lidi-jr', region: 'ap-southeast-2') {
+                script {   
+                        if (params.Terraform_Action == 'plan') {
+                            sh 'terraform -chdir=terraform plan'
+                        }   else if (params.Terraform_Action == 'apply') {
+                            sh 'terraform -chdir=terraform apply -auto-approve'
+                        }   else if (params.Terraform_Action == 'destroy') {
+                            sh 'terraform -chdir=terraform destroy -auto-approve'
+                        } else {
+                            error "Invalid value for Terraform_Action: ${params.Terraform_Action}"
+                        }
                     }
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Deployment successful!'
-            slackSend (color: '#00FF00', message: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        }
-        failure {
-            echo 'Deployment failed!'
-            slackSend (color: '#FF0000', message: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
     }
 }
