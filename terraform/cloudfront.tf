@@ -11,10 +11,10 @@ terraform {
   required_version = ">= 1.3.0"
 }
 
-provider "aws" {
-  profile = "default"
-  region  = var.aws_region
-}
+#provider "aws" {
+#  profile = "default"
+#  region  = var.aws_region
+#}
 
 resource "aws_s3_bucket" "website_bucket" {
   bucket = var.website_bucket
