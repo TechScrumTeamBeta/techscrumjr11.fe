@@ -29,4 +29,12 @@ settings.json
 /cypress/screenshots
 /cypress/videos
 
-.terraform
+# local .terraform dir
+terraform/.terraform/
+
+# tfstate files
+*.tfstate
+*.tfstate.*
+
+# terraform lock file
+terraform/.terraform.lock.hcl
