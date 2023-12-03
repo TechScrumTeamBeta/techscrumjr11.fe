@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "website_bucket" {
   description = "S3 bucket name"
   type        = string
-  default     = "techscrum-dev"
+  default     = "techscrumjr11-dev"
 
   validation {
     condition = length(var.website_bucket) > 2 && length(var.website_bucket) < 64 && can(regex("^[0-9A-Za-z-]+$", var.website_bucket))
@@ -18,7 +18,7 @@ variable "website_bucket" {
 variable "log_bucket" {
   description = "S3 bucket name for access logging storage"
   type        = string
-  default     = "techscrum-dev-access-log"
+  default     = "techscrumjr11-dev-access-log"
 }
 
 variable "domain_name" {

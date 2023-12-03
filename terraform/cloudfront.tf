@@ -11,10 +11,10 @@ terraform {
   required_version = ">= 1.3.0"
 }
 
-#provider "aws" {
-#  profile = "default"
-#  region  = var.aws_region
-#}
+provider "aws" {
+  profile = "default"
+  region  = var.aws_region
+}
 
 resource "aws_s3_bucket" "website_bucket" {
   bucket = var.website_bucket
@@ -77,7 +77,7 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
 
   origin {
     domain_name              = aws_s3_bucket.website_bucket.bucket_regional_domain_name
-    origin_id                = "techscrum-dev-s3-origin"
+    origin_id                = "techscrumjr11-dev-s3-origin"
     origin_access_control_id = aws_cloudfront_origin_access_control.OAC.id
 
   }
@@ -92,7 +92,7 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
 
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "techscrum-dev-s3-origin"
+    target_origin_id = "techscrumjr11-dev-s3-origin"
 
     forwarded_values {
       query_string = false
@@ -110,13 +110,13 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:ap-southeast-2:650635451238:certificate/bc84db96-b53d-4ebb-947c-1159c243f85b"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:650635451238:certificate/81565df2-3631-4165-8d8d-3bfcf3325387"
     ssl_support_method = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
 }
 resource "aws_cloudfront_origin_access_control" "OAC" {
-  name                              = "TechScrum-Dev OAC"
+  name                              = "TechScrumjr11-Dev OAC"
   description                       = "description of OAC"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
