@@ -32,9 +32,13 @@ settings.json
 # local .terraform dir
 terraform/.terraform/
 
+# local terraform backup 
+terraform/backup
+
 # tfstate files
 *.tfstate
 *.tfstate.*
 
 # terraform lock file
 terraform/.terraform.lock.hcl
+

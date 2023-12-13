@@ -1,6 +1,6 @@
 provider "aws" {
   alias = "acm"
-  region = "ap-southeast-2"
+  region = "us-east-1"
 }
 
 resource "aws_acm_certificate" "cert" {
@@ -28,7 +28,7 @@ resource "aws_route53_record" "cert_validation" {
     name            = each.value.name
     records         = [each.value.record]
     type            = each.value.type
-    zone_id         = "Z0498460343V5H8RIFB94"
+    zone_id         = var.zone_id
     ttl             = 60
 }
 resource "aws_acm_certificate_validation" "cert" {
@@ -37,12 +37,12 @@ resource "aws_acm_certificate_validation" "cert" {
 }
 
 data "aws_route53_zone" "existing_zone" {
-  name         = "techscrumjr11.com"
+  name         = var.existing_zone
   private_zone = false
 }
 
 #resource "aws_route53_record" "www" {
-#  zone_id = "Z0498460343V5H8RIFB94"
+#  zone_id = var.zone_id
 #  name    = "www.${var.domain_name}"
 #  type    = "A"
 #  alias {
@@ -53,13 +53,13 @@ data "aws_route53_zone" "existing_zone" {
 #}
 
 resource "aws_route53_record" "apex" {
-  zone_id = "Z0498460343V5H8RIFB94"
+  zone_id = var.zone_id
   name    = var.domain_name
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.cdn_static_site.domain_name
-    zone_id                = aws_cloudfront_distribution.cdn_static_site.hosted_zone_id
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
 }
