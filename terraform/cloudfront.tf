@@ -89,7 +89,7 @@ resource "aws_s3control_multi_region_access_point" "multibucket" {
 }
 
 resource "aws_cloudfront_origin_access_control" "OAC" {
-  name                              = "TechScrum OAC"
+  name                              = "TechScrum-UAT OAC"
   description                       = "description of OAC"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
