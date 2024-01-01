@@ -16,28 +16,28 @@ variable "aws_region_ha" {
 variable "website_bucket" {
   description = "S3 bucket name"
   type        = string
-  default     = "techscrumjr11-uat"
+  default     = "techscrumjr11-qa"
 }
 
 # Bucket Variable
 variable "website_bucket_ha" {
   description = "S3 bucket name"
   type        = string
-  default     = "techscrumjr11-uat-sg"
+  default     = "techscrumjr11-qa-sg"
 }
 
 # Bucket Variable
 variable "log_bucket" {
   description = "S3 bucket name for access logging storage"
   type        = string
-  default     = "techscrumjr11-uat-access-log"
+  default     = "techscrumjr11-qa-access-log"
 }
 
 # Domain Variable
 variable "domain_name" {
   type        = string
   description = "The domain name to use"
-  default     = "uat.techscrumjr11.com"
+  default     = "qa.techscrumjr11.com"
 }
 
 # Domain Variable

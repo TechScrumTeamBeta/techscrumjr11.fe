@@ -89,8 +89,8 @@ resource "aws_s3control_multi_region_access_point" "multibucket" {
 }
 
 resource "aws_cloudfront_origin_access_control" "OAC" {
-  name                              = "TechScrum-UAT OAC"
-  description                       = "description of OAC"
+  name                              = "TechScrum-QA OAC"
+  description                       = "description of TechScrum-QA OAC"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -101,7 +101,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
-  comment             = "my cloudfront in front of the s3 bucket"
+  comment             = "cloudfront of TechScurm-QA"
 
   origin_group {
     origin_id = "groupS3"
