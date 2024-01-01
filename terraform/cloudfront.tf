@@ -76,7 +76,7 @@ resource "aws_s3_account_public_access_block" "website_bucket_ha" {
 
 resource "aws_s3control_multi_region_access_point" "multibucket" {
   details {
-    name = "multibucket-QA"
+    name = "multibucket-qa"
 
     region {
       bucket = aws_s3_bucket.website_bucket.id
